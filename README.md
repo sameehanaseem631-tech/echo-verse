@@ -108,46 +108,7 @@ def echoverse_run_interactive(use_granite=False, granite_api_key=None, granite_e
         print("Paste your text. Press Enter when done.")
         text = input("Enter text:\n")
 
-    if not text.strip():
-        print("No text provided. Exiting.")
-        return
-
-    print("\nChoose a tone:")
-    print("  1) Neutral")
-    print("  2) Suspenseful")
-    print("  3) Inspiring")
-    tone_choice = input("Enter 1 / 2 / 3 [default 1]: ").strip() or "1"
-    tone_map = {"1":"Neutral", "2":"Suspenseful", "3":"Inspiring"}
-    tone = tone_map.get(tone_choice, "Neutral")
-    print(f"Selected tone: {tone}\n")
-
-    rewritten = None
-    if use_granite:
-        try:
-            print("Attempting to use IBM Watsonx Granite for rewrite...")
-            rewritten = rewrite_with_granite(text, tone, api_key=granite_api_key, endpoint=granite_endpoint)
-        except Exception as e:
-            print("Granite unavailable -> using local rewrite.")
-            rewritten = rewrite_with_local(text, tone)
-    else:
-        rewritten = rewrite_with_local(text, tone)
-
-    preview = rewritten[:800] + ("..." if len(rewritten) > 800 else "")
-    print("\n=== Rewritten preview ===\n")
-    print(textwrap.fill(preview, width=90))
-    print("\n")
-
-    synth_choice = input("Generate audio? (y/n) [default y]: ").strip().lower() or "y"
-    if synth_choice != 'y':
-        print("Done. Copy the rewritten text from the preview above.")
-        return
-
-    print("Generating MP3 with gTTS...")
-    mp3_path = save_mp3_from_text(rewritten, lang='en')
-    print(f"Saved audio to: {mp3_path}")
-    play_audio_file(mp3_path)
-    display(download_link_html(mp3_path, link_text="Download EchoVerse MP3"))
-
+    
 # ---------- Demo run (uncomment to run immediately) ----------
 # echoverse_run_interactive(use_granite=False)
 
